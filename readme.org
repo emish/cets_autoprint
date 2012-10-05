@@ -1,0 +1,40 @@
+Autoprint
+
+
+* Install Python package locally
+  We need to install the pyPdf package to our eniac home and add the
+  install dir to our path. 
+
+  1. Augment PYTHONPATH to include ~/lib/python
+     
+     This will allow easy_install to write to that location.
+
+  2. install pyPdf
+
+     #+begin_src shell
+     >> easy_install -d ~/lib/python pyPdf
+     #+end_src
+
+* Python script
+
+** Watch for directory updates
+   We'll check the directory for new files whenever we are ready to
+   release a new print job, since we are restricted by that anyway.
+   So we'll need a queue of jobs. 
+
+** Process new files
+   For each file: 
+     Split it into multiple files if it is greater than 10 pages.
+     Add those files to the queue.
+
+** Release print jobs
+   For each file in the queue (referenced by filename), release to
+   printer at print interval. 
+
+** Delete files once they have been processed
+   Trivial.
+
+** Special label for urgent files to be printed
+   This would be cool; if a filename starts with URG or something
+   similar, the script puts precedence on it and that file gets
+   printed first. 
