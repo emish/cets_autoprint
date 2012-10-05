@@ -59,6 +59,7 @@
     There are some variables in the script you should edit to match
     your own setup. These are : 
 
+    - home :: The path to your home directory.
     - logfile :: Where you'd like the process to log to. Default is in
                  your home directory.
     - path_to_watch :: This is the full path to the directory in which
