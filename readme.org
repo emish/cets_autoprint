@@ -1,40 +1,95 @@
-Autoprint
+* Autoprint
 
+** What this is
+   This is a script that is meant to run in the background on your
+   eniac account. It will constantly poll a specific directory which
+   you can provide, for PDF files to print. It will split the PDF
+   files in chunks of 10 pages (5 pages double sided) to be printed to
+   CETS every half-hour. 
+   
+   This lets you drop PDFs into the folder using your favorite FTP
+   client or w/e and not have to worry about logging in to eniac to
+   get the job printed. It also lets you print large jobs over time
+   while abiding by the CETS printing policy. 
 
-* Install Python package locally
-  We need to install the pyPdf package to our eniac home and add the
-  install dir to our path. 
+** Disclaimer
+   You use this at your own risk. I take no responsibility for w/e
+   happens. 
 
-  1. Augment PYTHONPATH to include ~/lib/python
-     
-     This will allow easy_install to write to that location.
+   This script is not bulletproof in any way. Silly things will
+   definitely result in its termination, like not being able to open a
+   file, or anything else that fires a Python Exception. I don't care
+   about this but feel free to harden it if you do.
 
-  2. install pyPdf
+** Setup
+   We need to install the pyPdf package to our eniac home and add the
+   install dir to our path, since we can't install anything to Eniac directly.
 
-     #+begin_src shell
-     >> easy_install -d ~/lib/python pyPdf
-     #+end_src
+   1. Augment PYTHONPATH to include ~/lib/python
+      
+      This will allow easy_install to write to that location. If that
+      dir doesn't exist then create it. Add the following to your .bashrc:
 
-* Python script
+      #+begin_src shell
+      export PYTHONPATH=~/lib/python:$PYTHONPATH
+      #+end_src
 
-** Watch for directory updates
-   We'll check the directory for new files whenever we are ready to
-   release a new print job, since we are restricted by that anyway.
-   So we'll need a queue of jobs. 
+   2. install pyPdf
 
-** Process new files
-   For each file: 
-     Split it into multiple files if it is greater than 10 pages.
-     Add those files to the queue.
+      #+begin_src shell
+      >> easy_install -d ~/lib/python pyPdf
+      #+end_src
 
-** Release print jobs
-   For each file in the queue (referenced by filename), release to
-   printer at print interval. 
+** How to use
 
-** Delete files once they have been processed
-   Trivial.
+   Run a screen session, and have this script running within it
+   indefinitely. Since we don't have the authority to create daemons on
+   Eniac, this is our next best option. Screen lets you run shell
+   sessions for arbitrary amounts of time across different login
+   sessions. 
 
-** Special label for urgent files to be printed
-   This would be cool; if a filename starts with URG or something
-   similar, the script puts precedence on it and that file gets
-   printed first. 
+   #+begin_src shell
+   >> screen
+   >> ./autoprint &
+   >> <CTRL>-D # Detaches from the screen
+   #+end_src
+
+*** Script Variables
+    
+    There are some variables in the script you should edit to match
+    your own setup. These are : 
+
+    - logfile :: Where you'd like the process to log to. Default is in
+                 your home directory.
+    - path_to_watch :: This is the full path to the directory in which
+                       you will place your PDFs for printing. It must
+                       exist.
+    - time_poll :: How frequently you'd like this script to poll your
+                   printing directory for new documents. The default is
+                   10 seconds.
+    - leeway_pages :: How many pages you're willing to go over the 5
+                      page policy limit. 
+
+** Script description
+
+*** Watch for directory updates
+    We'll check the directory for new files whenever we are ready to
+    release a new print job, since we are restricted by that anyway.
+    So we'll need a queue of jobs. 
+
+*** Process new files
+    For each file: 
+      Split it into multiple files if it is greater than 10 pages.
+      Add those files to the queue.
+
+*** Release print jobs
+    For each file in the queue (referenced by filename), release to
+    printer at print interval. 
+
+*** Delete files once they have been processed
+    Trivial.
+
+*** Special label for urgent files to be printed
+    This would be cool; if a filename starts with URG or something
+    similar, the script puts precedence on it and that file gets
+    printed first. 

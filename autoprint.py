@@ -1,42 +1,44 @@
-#!/opt/local/bin/python
+#!/usr/bin/python
+# autoprint.py
 
 """Automatically manage and print pdfs in a source directory
 to CETS for free printing while abiding by the printing policy.
-Since this is not a real daemon and will be running in screen anyway,
-we'll print diagnostics to stdout for quick reference.
 """
 
-import os, time, subprocess
+import os, time, subprocess, datetime
 from pyPdf import PdfFileWriter, PdfFileReader
 
 # Adjust these globals for eniac
-#path_to_watch = "/home1/e/emish/to_print"
-#print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
-logfile = "/home1/e/emish/logs"
-path_to_watch = "/Users/emish/Projects/autoprint/to_print"
-print_cmd = "ls "
-logfile = "/Users/emish/Projects/autoprint/logs"
+home = "/home1/e/emish"
+path_to_watch = home + "/to_print"
+print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
+logfile = home + "/autoprint.log"
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
 leeway_pages = 0
 real_leeway = leeway_pages * 2
-# Look for a new file every 10 seconds
+
+# Look for a new file every _ seconds
 time_poll = 10
 
 # Program invariant globals
 file_queue = []
 
 def log(s):
+    """Log the string s with pretty date prepended.
+    """
+    now = datetime.datetime.now()
+    print >> logfile, now.strftime("%Y-%m-%d %H:%M"),
     print >> logfile, s
 
 def split_file(f, filename):
     """Split our file into 10-page sub-files and add those to the queue
     in order.
     """
-    print 'splitting file ' + filename
     global file_queue
     curr_page = 0
     pages_left = f.getNumPages()
+    log('Splitting file ' + filename + " with " + str(pages_left) + " pages.")
     while pages_left > 0:
         # Create the new file
         pages_processed = 0
@@ -64,7 +66,6 @@ def process_file(f):
     then adds it to the global queue.
     """
     global file_queue
-    print "Processing file: " + str(f)
     filename = path_to_watch + "/" + f
     # Non-pdfs are not supported
     if (filename[-4:] != ".pdf"):
@@ -84,25 +85,28 @@ def main():
 
     while True:
         # Release a print job if any
-        print "Files to print = " + str(len(file_queue))
-        print file_queue
+        log("Files queued to print = " + str(len(file_queue)))
         if file_queue:
             file_to_print = file_queue.pop(0)
             tmp_cmd = print_cmd + file_to_print
-            print 'printing file ' + file_to_print
+            log("Releasing print job for file: " + file_to_print)
             subprocess.call(tmp_cmd, shell=True)
             # If more jobs, wait 30 minutes for sure.
             if file_queue:
                 jobs_waiting = True
+                log("Waiting for next print release")
             # Get rid of file
             os.remove(file_to_print)
-        else: jobs_waiting = False
+        else:
+            jobs_waiting = False
+            log("No more print jobs")
 
         # Update our files list
         last_check = os.listdir(path_to_watch)
         for f in last_check:
             fname = path_to_watch + '/' + f
             if fname not in file_queue:
+                log("Processing file: "+f)
                 process_file(f)
 
         # If we just printed, we wait 30 mins, otherwise keep
