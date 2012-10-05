@@ -1,15 +1,21 @@
 #!/opt/local/bin/python
 
+"""Automatically manage and print pdfs in a source directory
+to CETS for free printing while abiding by the printing policy.
+Since this is not a real daemon and will be running in screen anyway,
+we'll print diagnostics to stdout for quick reference.
+"""
+
 import os, time, subprocess
 from pyPdf import PdfFileWriter, PdfFileReader
-
-d = True
 
 # Adjust these globals for eniac
 #path_to_watch = "/home1/e/emish/to_print"
 #print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
+logfile = "/home1/e/emish/logs"
 path_to_watch = "/Users/emish/Projects/autoprint/to_print"
 print_cmd = "ls "
+logfile = "/Users/emish/Projects/autoprint/logs"
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
 leeway_pages = 0
@@ -20,11 +26,12 @@ time_poll = 10
 # Program invariant globals
 file_queue = []
 
+def log(s):
+    print >> logfile, s
+
 def split_file(f, filename):
     """Split our file into 10-page sub-files and add those to the queue
     in order.
-    Input is pdf obj
-    Output is pdf obj 2-tuple
     """
     print 'splitting file ' + filename
     global file_queue
