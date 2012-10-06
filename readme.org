@@ -25,7 +25,7 @@
    We need to install the pyPdf package to our eniac home and add the
    install dir to our path, since we can't install anything to Eniac directly.
 
-   - Augment PYTHONPATH to include ~/lib/python
+   - Augment ~PYTHONPATH~ to include ~~/lib/python~
       
       This will allow easy_install to write to that location. If that
       dir doesn't exist then create it. Add the following to your .bashrc:
@@ -39,20 +39,6 @@
       #+BEGIN_SRC shell
       >> easy_install -d ~/lib/python pyPdf
       #+END_SRC
-
-** How to use
-
-   Run a screen session, and have this script running within it
-   indefinitely. Since we don't have the authority to create daemons on
-   Eniac, this is our next best option. Screen lets you run shell
-   sessions for arbitrary amounts of time across different login
-   sessions. 
-
-   #+BEGIN_SRC shell
-   >> screen
-   >> ./autoprint &
-   >> <CTRL>-D # Detaches from the screen
-   #+END_SRC
 
 *** Script Variables
     
@@ -70,6 +56,21 @@
                    10 seconds.
     - *leeway_pages* :: How many pages you're willing to go over the 5
                       page policy limit. 
+
+
+** How to use
+
+   Run a screen session, and have this script running within it
+   indefinitely. Since we don't have the authority to create daemons on
+   Eniac, this is our next best option. Screen lets you run shell
+   sessions for arbitrary amounts of time across different login
+   sessions. 
+
+   #+BEGIN_SRC shell
+   >> screen
+   >> ./autoprint &
+   >> <CTRL>-D # Detaches from the screen
+   #+END_SRC
 
 ** Script description
 
