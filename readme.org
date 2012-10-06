@@ -25,7 +25,7 @@
    We need to install the pyPdf package to our eniac home and add the
    install dir to our path, since we can't install anything to Eniac directly.
 
-   1. Augment PYTHONPATH to include ~/lib/python
+   - Augment PYTHONPATH to include ~/lib/python
       
       This will allow easy_install to write to that location. If that
       dir doesn't exist then create it. Add the following to your .bashrc:
@@ -34,7 +34,7 @@
       export PYTHONPATH=~/lib/python:$PYTHONPATH
       #+END_SRC
 
-   2. install pyPdf
+   - install pyPdf
 
       #+BEGIN_SRC shell
       >> easy_install -d ~/lib/python pyPdf
