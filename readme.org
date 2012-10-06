@@ -37,9 +37,6 @@
 
 
 ** Manual Setup
-   +We+ need to install the pyPdf package to our eniac home and add the
-   install dir to our path, since we can't install anything to Eniac +directly.+
-
    Eniac has pyPdf installed by default. In case you run into a
    problem where it doesn't, follow the directions below, otherwise
    just skip to setting up your script vars and executing the script below.
