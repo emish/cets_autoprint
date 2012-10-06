@@ -30,15 +30,15 @@
       This will allow easy_install to write to that location. If that
       dir doesn't exist then create it. Add the following to your .bashrc:
 
-      #+begin_src shell
+      #+BEGIN_SRC shell
       export PYTHONPATH=~/lib/python:$PYTHONPATH
-      #+end_src
+      #+END_SRC
 
    2. install pyPdf
 
-      #+begin_src shell
+      #+BEGIN_SRC shell
       >> easy_install -d ~/lib/python pyPdf
-      #+end_src
+      #+END_SRC
 
 ** How to use
 
@@ -48,11 +48,11 @@
    sessions for arbitrary amounts of time across different login
    sessions. 
 
-   #+begin_src shell
+   #+BEGIN_SRC shell
    >> screen
    >> ./autoprint &
    >> <CTRL>-D # Detaches from the screen
-   #+end_src
+   #+END_SRC
 
 *** Script Variables
     
