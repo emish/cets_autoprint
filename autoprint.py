@@ -9,10 +9,10 @@ import os, time, subprocess, datetime
 from pyPdf import PdfFileWriter, PdfFileReader
 
 # Adjust these globals for eniac
-home = "/home1/e/emish"
+home = os.getcwd()
 path_to_watch = home + "/to_print"
 print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
-logfile = home + "/autoprint.log"
+logfile = path_to_watch + "/autoprint.log"
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
 leeway_pages = 0
@@ -111,7 +111,7 @@ def main():
 
         # If we just printed, we wait 30 mins, otherwise keep
         # polling for new files
-        sleep_time = 5 if jobs_waiting else time_poll
+        sleep_time = 1800 if jobs_waiting else time_poll
 
         # Sleep until we can print again.
         if not first:

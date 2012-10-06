@@ -13,15 +13,30 @@
    while abiding by the CETS printing policy. 
 
 ** Disclaimer
-   You use this at your own risk. I take no responsibility for w/e
-   happens. 
+   You use this at your own risk. I take no responsibility for whatever
+   happens. I do not claim that CETS is happy with this.
 
    This script is not bulletproof in any way. Silly things will
    definitely result in its termination, like not being able to open a
    file, or anything else that fires a Python Exception. I don't care
    about this but feel free to harden it if you do.
 
-** Setup
+** Automatic Setup
+   
+   Run the following in terminal while logged in to eniac. You can
+   just copy it into terminal and hit enter.
+
+   #+BEGIN_SRC shell
+   curl -L https://github.com/emish/cets_autoprint/setup.sh | sh
+   #+END_SRC
+   
+   You will then be able to add files to the directory *to_print* in
+   your home directory for automatic printer dispatch. You can now
+   stop reading this manual and enjoy this new feature until it breaks
+   and you don't know why.
+
+
+** Manual Setup
    We need to install the pyPdf package to our eniac home and add the
    install dir to our path, since we can't install anything to Eniac directly.
 
@@ -69,8 +84,9 @@
    #+BEGIN_SRC shell
    >> screen
    >> ./autoprint &
-   >> <CTRL>-D # Detaches from the screen
    #+END_SRC
+
+   Then detach from the screen with ~<CTRL>-A D~.
 
 ** Script description
 
