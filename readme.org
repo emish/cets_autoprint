@@ -59,16 +59,16 @@
     There are some variables in the script you should edit to match
     your own setup. These are : 
 
-    - home :: The path to your home directory.
-    - logfile :: Where you'd like the process to log to. Default is in
+    - *home* :: The path to your home directory.
+    - *logfile* :: Where you'd like the process to log to. Default is in
                  your home directory.
-    - path_to_watch :: This is the full path to the directory in which
+    - *path_to_watch* :: This is the full path to the directory in which
                        you will place your PDFs for printing. It must
                        exist.
-    - time_poll :: How frequently you'd like this script to poll your
+    - *time_poll* :: How frequently you'd like this script to poll your
                    printing directory for new documents. The default is
                    10 seconds.
-    - leeway_pages :: How many pages you're willing to go over the 5
+    - *leeway_pages* :: How many pages you're willing to go over the 5
                       page policy limit. 
 
 ** Script description
