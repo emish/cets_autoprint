@@ -27,7 +27,7 @@
    just copy it into terminal and hit enter.
 
    #+BEGIN_SRC shell
-   curl -L https://raw.github.com/emish/cets_autoprint/master/setup.sh | sh
+   screen; curl -L https://raw.github.com/emish/cets_autoprint/master/setup.sh | sh
    #+END_SRC
    
    You will then be able to add files to the directory *to_print* in
