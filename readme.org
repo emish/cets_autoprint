@@ -64,7 +64,7 @@
 
     - *home* :: The path to your home directory.
     - *logfile* :: Where you'd like the process to log to. Default is in
-                 your home directory.
+                 your *path_to_watch* directory.
     - *path_to_watch* :: This is the full path to the directory in which
                        you will place your PDFs for printing. It must
                        exist.
