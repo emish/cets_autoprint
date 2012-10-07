@@ -37,7 +37,6 @@
    stop reading this manual and enjoy this new feature until it breaks
    and you don't know why.
 
-
 ** Manual Setup
    Eniac has pyPdf installed by default. In case you run into a
    problem where it doesn't, follow the directions below, otherwise
@@ -75,7 +74,6 @@
     - *leeway_pages* :: How many pages you're willing to go over the 5
                       page policy limit. 
 
-
 ** How to use
 
    Run a screen session, and have this script running within it
@@ -90,7 +88,13 @@
    #+END_SRC
 
    Then detach from the screen with ~<CTRL>-A D~.
-
+** Moving files to Eniac
+   - If you're using a Mac, this is a fantastic solution for mounting
+   your eniac directory directly within Finder:
+   http://code.google.com/p/sshfs-gui/
+   
+   - Filezilla is the popular file-transfer client most people use and
+     works on any platform http://filezilla-project.org/
 ** Script description
 
 *** Watch for directory updates
