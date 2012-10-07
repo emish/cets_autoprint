@@ -23,11 +23,13 @@
 
 ** Automatic Setup
    
-   Run the following in terminal while logged in to eniac. You can
-   just copy it into terminal and hit enter.
+   Run the following commands in terminal while logged in to eniac. You can
+   just copy it into terminal and hit enter. After running screen,
+   press enter or space to get your prompt again.
 
    #+BEGIN_SRC shell
-   screen; curl -L https://raw.github.com/emish/cets_autoprint/master/setup.sh | sh
+   $ screen
+   $ curl -L https://raw.github.com/emish/cets_autoprint/master/setup.sh | sh
    #+END_SRC
    
    You will then be able to add files to the directory *to_print* in
