@@ -12,7 +12,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 home = os.getcwd()
 path_to_watch = home + "/to_print"
 print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
-logfile = path_to_watch + "/autoprint.log"
+logfile = file(path_to_watch + "/autoprint.log", 'w')
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
 leeway_pages = 0
@@ -30,6 +30,7 @@ def log(s):
     now = datetime.datetime.now()
     print >> logfile, now.strftime("%Y-%m-%d %H:%M"),
     print >> logfile, s
+    logfile.flush()
 
 def split_file(f, filename):
     """Split our file into 10-page sub-files and add those to the queue
@@ -83,10 +84,12 @@ def main():
     jobs_waiting = False
     first = True
 
+    log("Started autoprint. Watching to_print directory.")
+
     while True:
         # Release a print job if any
-        log("Files queued to print = " + str(len(file_queue)))
         if file_queue:
+            log("Files queued to print = " + str(len(file_queue)))
             file_to_print = file_queue.pop(0)
             tmp_cmd = print_cmd + file_to_print
             log("Releasing print job for file: " + file_to_print)
@@ -99,11 +102,11 @@ def main():
             os.remove(file_to_print)
         else:
             jobs_waiting = False
-            log("No more print jobs")
 
         # Update our files list
         last_check = os.listdir(path_to_watch)
         for f in last_check:
+            if f == 'autoprint.log': continue
             fname = path_to_watch + '/' + f
             if fname not in file_queue:
                 log("Processing file: "+f)
