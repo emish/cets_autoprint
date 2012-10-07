@@ -90,7 +90,7 @@
    Then detach from the screen with ~<CTRL>-A D~.
 ** Moving files to Eniac
    - If you're using a Mac, this is a fantastic solution for mounting
-   your eniac directory directly within Finder:
+     your eniac directory directly within Finder:
    http://code.google.com/p/sshfs-gui/
    
    - Filezilla is the popular file-transfer client most people use and
