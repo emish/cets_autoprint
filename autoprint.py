@@ -115,7 +115,9 @@ def main():
         # Update our files list
         last_check = os.listdir(path_to_watch)
         for f in last_check:
-            if f == 'autoprint.log': continue
+            if f == 'autoprint.log' \
+                    or f[0] == '.':
+                continue
             fname = path_to_watch + '/' + f
             if fname not in file_queue:
                 log("Processing file: "+f)
