@@ -14,8 +14,8 @@ debug = True
 # Adjust these globals for eniac
 home = os.getenv('HOME')
 path_to_watch = home + "/to_print"
-print_cmd = "mkdir "
-#print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
+#print_cmd = "mkdir "
+print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
 logfile = file(path_to_watch + "/autoprint.log", 'w')
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
