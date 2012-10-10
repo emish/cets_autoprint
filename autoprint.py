@@ -12,7 +12,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 debug = True
 
 # Adjust these globals for eniac
-home = os.getcwd()
+home = os.getenv('HOME')
 path_to_watch = home + "/to_print"
 print_cmd = "mkdir "
 #print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
