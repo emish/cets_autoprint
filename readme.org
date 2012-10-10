@@ -122,3 +122,12 @@
     This would be cool; if a filename starts with URG or something
     similar, the script puts precedence on it and that file gets
     printed first. 
+
+** Current bugs/improvements
+*** Avoiding incomplete files
+    The script currently has no way of finding out whether a file is
+    done being copied or not. As a result, it will prematurely try to
+    process a file even if that file is not "ready" yet, and will
+    ultimately fail and perhaps crash. 
+
+    This can be fixed with inotify.
