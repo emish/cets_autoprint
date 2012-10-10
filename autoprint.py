@@ -23,9 +23,9 @@ leeway_pages = 0
 real_leeway = leeway_pages * 2
 
 # Look for a new file every _ seconds
-time_poll = 5
+time_poll = 20
 # Seconds in a half-hour
-half_hour = 8
+half_hour = 1800
 
 # Program invariant globals
 file_queue = []
@@ -91,7 +91,11 @@ def process_file(f):
         fp = file(filename, 'rb')
         pdf_f = PdfFileReader(fp)
     except IOError as e:
-        log("Unable to process file "+filename)
+        log("ERROR: Unable to process file "+filename)
+        log(str(e))
+        return
+    except e:
+        log("ERROR: Unable to read PDF File")
         log(str(e))
         return
 
@@ -108,6 +112,15 @@ def main():
     log("Started autoprint. Watching "+path_to_watch+" directory.")
 
     while True:
+        # Update our files list
+        last_check = os.listdir(path_to_watch)
+        for f in last_check:
+            if f == 'autoprint.log': continue
+            fname = path_to_watch + '/' + f
+            if fname not in file_queue:
+                log("Processing file: "+f)
+                process_file(f)
+
         # Release a print job if any
         if file_queue:
             log("Files queued to print = " + str(len(file_queue)))
@@ -128,15 +141,6 @@ def main():
                 os.remove(file_to_print)
             except OSError:
                 log("ERROR: Can't remove file "+file_to_print)
-
-        # Update our files list
-        last_check = os.listdir(path_to_watch)
-        for f in last_check:
-            if f == 'autoprint.log': continue
-            fname = path_to_watch + '/' + f
-            if fname not in file_queue:
-                log("Processing file: "+f)
-                process_file(f)
 
         # If we just printed, we wait 30 mins.
         if jobs_printed:

@@ -95,6 +95,10 @@
    
    - Filezilla is the popular file-transfer client most people use and
      works on any platform http://filezilla-project.org/
+** Logging
+   If you want to check on the status of your print jobs, perhaps
+   something is fishy and you expected them to be done by now, look at
+   the log file ~autoprint.log~ for details on what happened last. 
 ** Script description
 
 *** Watch for directory updates
