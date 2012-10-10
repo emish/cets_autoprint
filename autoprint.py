@@ -8,10 +8,14 @@ to CETS for free printing while abiding by the printing policy.
 import os, time, subprocess, datetime
 from pyPdf import PdfFileWriter, PdfFileReader
 
+# Are we debugging
+debug = True
+
 # Adjust these globals for eniac
 home = os.getcwd()
 path_to_watch = home + "/to_print"
-print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
+print_cmd = "mkdir "
+#print_cmd = "lpr -P169 -o Duplex=DuplexNoTumble "
 logfile = file(path_to_watch + "/autoprint.log", 'w')
 
 # The number of pages we're willing to let slide beyond the 5 page limit'
@@ -19,7 +23,9 @@ leeway_pages = 0
 real_leeway = leeway_pages * 2
 
 # Look for a new file every _ seconds
-time_poll = 10
+time_poll = 5
+# Seconds in a half-hour
+half_hour = 8
 
 # Program invariant globals
 file_queue = []
@@ -28,7 +34,16 @@ def log(s):
     """Log the string s with pretty date prepended.
     """
     now = datetime.datetime.now()
-    print >> logfile, now.strftime("%Y-%m-%d %H:%M"),
+    print >> logfile, now.strftime("%Y-%m-%d %H:%M:%S :: "),
+    print >> logfile, s
+    logfile.flush()
+
+def logdebug(s):
+    """Log a debug message.
+    """
+    if not debug: return
+    now = datetime.datetime.now()
+    print >> logfile, now.strftime("%Y-%m-%d %H:%M:%S :: DEBUG : "),
     print >> logfile, s
     logfile.flush()
 
@@ -70,9 +85,16 @@ def process_file(f):
     filename = path_to_watch + "/" + f
     # Non-pdfs are not supported
     if (filename[-4:] != ".pdf"):
+        log("Not a valid PDF file.")
         return
-    fp = file(filename, 'rb')
-    pdf_f = PdfFileReader(fp)
+    try:
+        fp = file(filename, 'rb')
+        pdf_f = PdfFileReader(fp)
+    except IOError as e:
+        log("Unable to process file "+filename)
+        log(str(e))
+        return
+
     if pdf_f.getNumPages() > (10 + real_leeway):
         split_file(pdf_f, filename)
     else:
@@ -81,10 +103,9 @@ def process_file(f):
 
 def main():
     global file_queue
-    jobs_waiting = False
-    first = True
+    jobs_printed = False
 
-    log("Started autoprint. Watching to_print directory.")
+    log("Started autoprint. Watching "+path_to_watch+" directory.")
 
     while True:
         # Release a print job if any
@@ -93,15 +114,20 @@ def main():
             file_to_print = file_queue.pop(0)
             tmp_cmd = print_cmd + file_to_print
             log("Releasing print job for file: " + file_to_print)
-            subprocess.call(tmp_cmd, shell=True)
-            # If more jobs, wait 30 minutes for sure.
-            if file_queue:
-                jobs_waiting = True
-                log("Waiting for next print release")
+            try:
+                subprocess.check_output(tmp_cmd,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+            except subprocess.CalledProcessError as e:
+                log("ERROR: Can't print file.")
+                log(e.output)
+            # Wait 30 mins after a processed job
+            jobs_printed = True
             # Get rid of file
-            os.remove(file_to_print)
-        else:
-            jobs_waiting = False
+            try:
+                os.remove(file_to_print)
+            except OSError:
+                log("ERROR: Can't remove file "+file_to_print)
 
         # Update our files list
         last_check = os.listdir(path_to_watch)
@@ -112,15 +138,21 @@ def main():
                 log("Processing file: "+f)
                 process_file(f)
 
-        # If we just printed, we wait 30 mins, otherwise keep
-        # polling for new files
-        sleep_time = 1800 if jobs_waiting else time_poll
+        # If we just printed, we wait 30 mins.
+        if jobs_printed:
+            sleep_time = half_hour
+            jobs_printed = False
+            log("Sleeping for half-hour")
+        # Don't sleep if job waiting and we are not waiting for printer'
+        elif file_queue:
+            sleep_time = 0
+            log("Job forward to print.")
+        # Sleep time-poll if no new updates
+        else:
+            sleep_time = time_poll
 
         # Sleep until we can print again.
-        if not first:
-            time.sleep(sleep_time)
-        else:
-            first = False
+        time.sleep(sleep_time)
 
 if __name__ == '__main__':
     main()
