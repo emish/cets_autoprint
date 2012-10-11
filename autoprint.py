@@ -112,18 +112,8 @@ def main():
     log("Started autoprint. Watching "+path_to_watch+" directory.")
 
     while True:
-        # Update our files list
-        last_check = os.listdir(path_to_watch)
-        for f in last_check:
-            if f == 'autoprint.log' \
-                    or f[0] == '.':
-                continue
-            fname = path_to_watch + '/' + f
-            if fname not in file_queue:
-                log("Processing file: "+f)
-                process_file(f)
 
-        # Release a print job if any
+        # Release a print job if any (PROCESS)
         if file_queue:
             log("Files queued to print = " + str(len(file_queue)))
             file_to_print = file_queue.pop(0)
@@ -144,6 +134,18 @@ def main():
             except OSError:
                 log("ERROR: Can't remove file "+file_to_print)
 
+        # Update our files list (UPDATE)
+        last_check = os.listdir(path_to_watch)
+        for f in last_check:
+            if f == 'autoprint.log' \
+                    or f[0] == '.':
+                continue
+            fname = path_to_watch + '/' + f
+            if fname not in file_queue:
+                log("Processing file: "+f)
+                process_file(f)
+
+        # (SLEEP)
         # If we just printed, we wait 30 mins.
         if jobs_printed:
             sleep_time = half_hour
